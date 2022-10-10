@@ -6,12 +6,18 @@ import { Modal } from "./components/Modal";
 import { Product } from "./components/Product";
 import { useProducts } from './hooks/products';
 import { useState } from 'react';
+import { IProduct } from './models';
 
 function App() {
 
-  const { products, loading, error } = useProducts()
+  const { products, loading, error, addProduct } = useProducts()
 
   const [modal, setModal] = useState(true)
+
+  const createHadler = (product: IProduct) => {
+    setModal(false)
+    addProduct(product)
+  }
 
   return (
     <div className="container mx-auto max-w-2xl pt-5">
@@ -20,7 +26,7 @@ function App() {
       { products.map(product => <Product key={product.id} product={product} />) }
 
       {modal && <Modal title="Create new Product">
-        <CreateProduct onCreate={() => setModal(false) } />
+        <CreateProduct onCreate={createHadler} />
       </Modal>}
     </div>
   )
