@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { Product } from "./components/Product";
 import { IProduct } from './models';
 
@@ -9,11 +9,19 @@ function App() {
 
   const [loading, setLoading] = useState(false)
 
+  const [error, setError] = useState('')
+
   async function fetchProducts() {
-    setLoading(true)
-    const response =  await axios.get<IProduct[]>('https://fakestoreapi.com/products?limit=5')
-    setProducts(response.data)
-    setLoading(false)
+    try {
+      setLoading(true)
+      const response =  await axios.get<IProduct[]>('https://fakestoreapi.com/products?limit=5')
+      setProducts(response.data)
+      setLoading(false)
+    } catch (e: unknown) {
+      const error = e as AxiosError 
+      setLoading(false)
+      setError(error.message)
+    }
   }
 
   useEffect(() => {
@@ -23,6 +31,7 @@ function App() {
   return (
     <div className="container mx-auto max-w-2xl pt-5">
       {loading && <p className='text-center'>Loading...</p>}
+      {error && <p className='text-center text-red-500'>{error}</p>}
       { products.map(product => <Product key={product.id} product={product} />) }
     </div>
   )
