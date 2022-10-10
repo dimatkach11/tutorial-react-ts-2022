@@ -5,17 +5,18 @@ import { Loader } from "./components/Loader";
 import { Modal } from "./components/Modal";
 import { Product } from "./components/Product";
 import { useProducts } from './hooks/products';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { IProduct } from './models';
+import { ModalContext } from './context/ModalContext';
 
 function App() {
 
   const { products, loading, error, addProduct } = useProducts()
 
-  const [modal, setModal] = useState(false)
+  const {modal, open: openModal, close: closeModal } = useContext(ModalContext)
 
   const createHadler = (product: IProduct) => {
-    setModal(false)
+    closeModal()
     addProduct(product)
   }
 
@@ -25,11 +26,11 @@ function App() {
       {error && <ErrorMessage error={error} />}
       { products.map(product => <Product key={product.id} product={product} />) }
 
-      {modal && <Modal title="Create new Product" onClose={() => setModal(false)}>
+      {modal && <Modal title="Create new Product" onClose={closeModal}>
         <CreateProduct onCreate={createHadler} />
       </Modal>}
 
-      <button onClick={() => setModal(true)} 
+      <button onClick={openModal} 
         className="w-10 h-10 rounded-full fixed bottom-5 right-5 bg-red-500 text-2xl text-white"
         >+</button>
     </div>
