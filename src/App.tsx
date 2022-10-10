@@ -12,7 +12,7 @@ function App() {
 
   const { products, loading, error, addProduct } = useProducts()
 
-  const [modal, setModal] = useState(true)
+  const [modal, setModal] = useState(false)
 
   const createHadler = (product: IProduct) => {
     setModal(false)
@@ -28,6 +28,10 @@ function App() {
       {modal && <Modal title="Create new Product" onClose={() => setModal(false)}>
         <CreateProduct onCreate={createHadler} />
       </Modal>}
+
+      <button onClick={() => setModal(true)} 
+        className="w-10 h-10 rounded-full fixed bottom-5 right-5 bg-red-500 text-2xl text-white"
+        >+</button>
     </div>
   )
 }
