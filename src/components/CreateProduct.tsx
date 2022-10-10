@@ -15,11 +15,17 @@ const productData: IProduct =  {
   }
 }
 
-export function CreateProduct() {
+interface CreateProductProps {
+  onCreate: () => void
+}
+
+export function CreateProduct({onCreate}: CreateProductProps) {
 
   const [value, setValue] = useState('')
 
   const [error, setError] = useState('')
+
+
 
   const submitHandler = async (event: FormEvent) => {
     event.preventDefault()
@@ -32,6 +38,8 @@ export function CreateProduct() {
 
     productData.title = value
     const response =  await axios.post<IProduct>('https://fakestoreapi.com/products', productData)
+
+    onCreate()
   }
 
   const cangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
